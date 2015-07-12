@@ -43,7 +43,7 @@ public class Data {
     }
 
     private void insertNewLineIfNeeded(StringBuilder builder) {
-        if (builder.length() > 0  && builder.charAt(builder.length() - 1) != '\n') {
+        if (builder.length() > 0 && builder.charAt(builder.length() - 1) != '\n') {
             builder.append('\n');
         }
     }
