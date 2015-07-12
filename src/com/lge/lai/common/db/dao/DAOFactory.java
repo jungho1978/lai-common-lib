@@ -39,6 +39,14 @@ public abstract class DAOFactory {
     public AsbCategoryDAO getAsbCategoryDAO(long asbId) {
         return new AsbCategoryDAO(asbId, this);
     }
+    
+    public AsbMimeDAO getAsbMimeDAO(long asbId) {
+        return new AsbMimeDAO(asbId, this);
+    }
+    
+    public AsbUriDAO getAsbUriDAO(long asbId) {
+        return new AsbUriDAO(asbId, this);
+    }
 }
 
 class DriverManagerDAOFactory extends DAOFactory {

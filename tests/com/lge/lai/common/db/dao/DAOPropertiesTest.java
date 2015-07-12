@@ -20,7 +20,7 @@ public class DAOPropertiesTest {
 
     @Test
     public void getUrlAsProperty() {
-        assertEquals("jdb:mysql://905205.iptime.org", properties.getProperty("url", true));
+        assertEquals("jdbc:mysql://905205.iptime.org", properties.getProperty("url", true));
     }
     
     @Test
