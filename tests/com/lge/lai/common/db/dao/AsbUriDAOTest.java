@@ -1,14 +1,12 @@
 package com.lge.lai.common.db.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.lge.lai.common.db.dto.Asb;
-import com.lge.lai.common.db.dto.AsbMime;
 import com.lge.lai.common.db.dto.AsbUri;
 
 public class AsbUriDAOTest {
@@ -57,7 +55,7 @@ public class AsbUriDAOTest {
         long asbUriId = 0L;
         try {
             asbUriId = asbUriDAO.create(asbUri);
-            AsbUri createdAsbUri = asbUriDAO.find(asbUriId);
+            AsbUri createdAsbUri = (AsbUri)asbUriDAO.find(asbUriId);
             if (!createdAsbUri.equals(asbUri)) {
                 fail("created object is not same with expected object");
             }

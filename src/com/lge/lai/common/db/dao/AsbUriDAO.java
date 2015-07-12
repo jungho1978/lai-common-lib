@@ -1,18 +1,12 @@
 package com.lge.lai.common.db.dao;
 
-import static com.lge.lai.common.db.dao.DAOUtil.close;
-import static com.lge.lai.common.db.dao.DAOUtil.prepareStatement;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.lge.lai.common.db.dto.AsbUri;
 
-public class AsbUriDAO {
+public class AsbUriDAO extends BaseDAO implements DaoCallback {
     private long asbId;
-    private DAOFactory daoFactory;
 
     private static final String DB = "LGAppIF";
     private static final String ASB_TABLE = DB + ".asb";
@@ -28,92 +22,43 @@ public class AsbUriDAO {
     private static final String SQL_DELETE_BY_ID = "DELETE FROM " + TABLE + " WHERE _id = ?";
 
     public AsbUriDAO(long asbId, DAOFactory daoFactory) {
+    	super(daoFactory);
         this.asbId = asbId;
-        this.daoFactory = daoFactory;
     }
 
-    public AsbUri find(long id) throws DAOException {
-        return find(SQL_FIND_BY_ID, id);
+    @Override
+    public Object find(long id) throws DAOException {
+        return find(this, SQL_FIND_BY_ID, id);
     }
 
-    private AsbUri find(String sql, Object... values) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = daoFactory.getConnection();
-            statement = prepareStatement(connection, sql, false, values);
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return map(resultSet);
-            } else {
-                throw new DAOException("Querying asbUri failed, no object obtained");
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } finally {
-            close(resultSet, statement, connection);
-        }
-    }    
+    @Override
+    public long create(Object obj) throws DAOException {
+    	if (obj instanceof AsbUri) {
+    		AsbUri asbUri = (AsbUri)obj;
+    		Object[] values = { asbId, asbUri.uri, asbUri.uriDesc };
 
-    public long create(AsbUri asbUri) throws DAOException {
-        Object[] values = { asbId, asbUri.uri, asbUri.uriDesc };
-
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet generatedKey = null;
-        try {
-            connection = daoFactory.getConnection();
-            statement = prepareStatement(connection, SQL_INSERT, true, values);
-            int affectedRows = statement.executeUpdate();
-            if (affectedRows == 0) {
-                throw new DAOException("Creating asbUri failed, not rows affected");
-            }
-
-            generatedKey = statement.getGeneratedKeys();
-            if (generatedKey.next()) {
-                return generatedKey.getLong(1);
-            } else {
-                throw new DAOException("Creating asbUri failed, no generated key obtained");
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } finally {
-            close(generatedKey, statement, connection);
-        }
+    		return create(SQL_INSERT, values);
+    	} else {
+    		throw new DAOException("instance is not valid: " + obj.getClass().getName());
+    	}
     }
 
+    @Override
     public void delete(long id) throws DAOException {
         delete(SQL_DELETE_BY_ID, id);
     }
 
-    private void delete(String sql, Object... values) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = daoFactory.getConnection();
-            statement = prepareStatement(connection, sql, false, values);
-            int affectedRows = statement.executeUpdate();
-            if (affectedRows == 0) {
-                throw new DAOException("Deleting asbUri failed, no rows affected.");
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } finally {
-            close(null, statement, connection);
-        }
-    }    
-
-    private static AsbUri map(ResultSet resultSet) throws SQLException {
-        String version = resultSet.getString("_version");
-        String type = resultSet.getString("_type");
-        String desc = resultSet.getString("_desc");
-        String packageName = resultSet.getString("_pkg_name");
-        String className = resultSet.getString("_cls_name");
-        String actionName = resultSet.getString("_action_name");
-        String uri = resultSet.getString("_uri");
-        String uriDesc = resultSet.getString("_uri_desc");
-        String updatedBy = resultSet.getString("_updated_by");
-        return new AsbUri(version, type, desc, packageName, className, actionName, uri, uriDesc, updatedBy);
-    }
+	@Override
+	public Object covertToDAO(ResultSet rs) throws SQLException {
+		String version = rs.getString("_version");
+		String type = rs.getString("_type");
+		String desc = rs.getString("_desc");
+		String packageName = rs.getString("_pkg_name");
+		String className = rs.getString("_cls_name");
+		String actionName = rs.getString("_action_name");
+		String uri = rs.getString("_uri");
+		String uriDesc = rs.getString("_uri_desc");
+		String updatedBy = rs.getString("_updated_by");
+		return new AsbUri(version, type, desc, packageName, className, actionName, uri, uriDesc, updatedBy);
+	}
 }

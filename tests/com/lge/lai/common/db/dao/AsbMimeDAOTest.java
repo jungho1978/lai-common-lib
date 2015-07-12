@@ -1,13 +1,12 @@
 package com.lge.lai.common.db.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.lge.lai.common.db.dto.Asb;
-import com.lge.lai.common.db.dto.AsbCategory;
 import com.lge.lai.common.db.dto.AsbMime;
 
 public class AsbMimeDAOTest {
@@ -55,7 +54,7 @@ public class AsbMimeDAOTest {
         long asbMimeId = 0L;
         try {
             asbMimeId = asbMimeDAO.create(asbMime);
-            AsbMime createdAsbMime = asbMimeDAO.find(asbMimeId);
+            AsbMime createdAsbMime = (AsbMime)asbMimeDAO.find(asbMimeId);
             if (!createdAsbMime.equals(asbMime)) {
                 fail("created object is not same with expected object");
             }

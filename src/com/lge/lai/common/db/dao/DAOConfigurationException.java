@@ -1,7 +1,7 @@
 package com.lge.lai.common.db.dao;
 
 public class DAOConfigurationException extends RuntimeException {
-    private static final long serialVersinUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     public DAOConfigurationException(String message) {
         super(message);

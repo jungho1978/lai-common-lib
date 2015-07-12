@@ -30,7 +30,7 @@ public class AsbDAOTest {
         long asbId = 0L;
         try {
             asbId = asbDAO.create(asb);
-            Asb createdAsb = asbDAO.find(asbId);
+            Asb createdAsb = (Asb)asbDAO.find(asbId);
             if (!createdAsb.equals(asb)) {
                 fail("created object is not same with expected object");
             }

@@ -54,7 +54,7 @@ public class AsbCategoryDAOTest {
         long asbCategoryId = 0L;
         try {
             asbCategoryId = asbCategoryDAO.create(asbCategory);
-            AsbCategory createdAsbCategory = asbCategoryDAO.find(asbCategoryId);
+            AsbCategory createdAsbCategory = (AsbCategory)asbCategoryDAO.find(asbCategoryId);
             if (!createdAsbCategory.equals(asbCategory)) {
                 fail("created object is not same with expected object");
             }
