@@ -15,19 +15,19 @@ public class DAOUtil {
         setValues(statement, values);
         return statement;
     }
-    
+
     private static void setValues(PreparedStatement statement, Object... values) throws SQLException {
         for (int i = 0; i < values.length; i++) {
             statement.setObject(i + 1, values[i]);
         }
     }
-    
+
     public static Timestamp toSqlTimestamp() {
         Calendar calendar = Calendar.getInstance();
         Date now = calendar.getTime();
         return new Timestamp(now.getTime());
     }
-    
+
     public static void close(ResultSet rs, Statement statement, Connection connection) {
         try {
             if (rs != null) {

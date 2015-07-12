@@ -9,7 +9,7 @@ import com.lge.lai.common.db.dto.Asb;
 
 public class AsbDAOTest {
     DAOFactory daoFactory;
-    
+
     @Before
     public void setUp() {
         daoFactory = DAOFactory.getInstance("LGAppIF.db");
@@ -44,5 +44,4 @@ public class AsbDAOTest {
             }
         }
     }
-
 }

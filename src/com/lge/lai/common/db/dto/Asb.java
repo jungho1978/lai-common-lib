@@ -3,15 +3,15 @@ package com.lge.lai.common.db.dto;
 import com.google.common.collect.ComparisonChain;
 
 public class Asb extends Base {
-	public String className;
-	public String actionName;
+    public String className;
+    public String actionName;
 
-	public Asb(String version, String type, String desc, String packageName,
-			String className, String actionName, String updatedBy) {
-		super(version, type, desc, packageName, updatedBy);
-		this.className = className;
-		this.actionName = actionName;
-	}
+    public Asb(String version, String type, String desc, String packageName, String className,
+            String actionName, String updatedBy) {
+        super(version, type, desc, packageName, updatedBy);
+        this.className = className;
+        this.actionName = actionName;
+    }
 
     @Override
     public boolean equals(Object obj) {
