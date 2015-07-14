@@ -1,7 +1,5 @@
 package com.lge.lai.common.db.dao;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -11,13 +9,8 @@ public class DAOProperties {
     private static final Properties PROPERTIES = new Properties();
 
     static {
-        InputStream propertiesFile = null;
-        try {
-            propertiesFile = new FileInputStream(PROPERTIES_FILE);
-        } catch (FileNotFoundException e1) {
-            throw new DAOConfigurationException("Properties file '" + PROPERTIES_FILE
-                    + "' is missing in given path.");
-        }
+    	ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    	InputStream propertiesFile = classLoader.getResourceAsStream(PROPERTIES_FILE);
 
         try {
             PROPERTIES.load(propertiesFile);
