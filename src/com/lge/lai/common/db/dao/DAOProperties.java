@@ -15,21 +15,21 @@ public class DAOProperties {
         try {
             propertiesFile = new FileInputStream(PROPERTIES_FILE);
         } catch (FileNotFoundException e1) {
-            throw new DAOConfigurationException(
-                    "Properties file '" + PROPERTIES_FILE + "' is missing in given path.");
+            throw new DAOConfigurationException("Properties file '" + PROPERTIES_FILE
+                    + "' is missing in given path.");
         }
 
         try {
             PROPERTIES.load(propertiesFile);
         } catch (IOException e) {
-            throw new DAOConfigurationException(
-                    "Cannot load properies file '" + PROPERTIES_FILE + "'.", e);
+            throw new DAOConfigurationException("Cannot load properies file '" + PROPERTIES_FILE
+                    + "'.", e);
         }
     }
 
     private String specificKey;
 
-    public DAOProperties(String  specificKey) throws DAOConfigurationException {
+    public DAOProperties(String specificKey) throws DAOConfigurationException {
         this.specificKey = specificKey;
     }
 
@@ -37,11 +37,10 @@ public class DAOProperties {
         String fullKey = specificKey + "." + key;
         String property = PROPERTIES.getProperty(fullKey);
 
-        if (property ==  null || property.trim().length() == 0) {
+        if (property == null || property.trim().length() == 0) {
             if (mandatory) {
-                throw new DAOConfigurationException(
-                        "Required proeprty '" + fullKey + "' is missing in properties file '"
-                        + PROPERTIES_FILE + "'.");
+                throw new DAOConfigurationException("Required proeprty '" + fullKey
+                        + "' is missing in properties file '" + PROPERTIES_FILE + "'.");
             } else {
                 property = null;
             }

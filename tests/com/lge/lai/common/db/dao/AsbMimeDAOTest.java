@@ -2,6 +2,8 @@ package com.lge.lai.common.db.dao;
 
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,14 +50,15 @@ public class AsbMimeDAOTest {
     @Test
     public void allOperations() {
         String mimeType = "image/*";
-        AsbMime asbMime = new AsbMime(asb.version, asb.type, asb.desc, asb.packageName, asb.className, asb.actionName, mimeType, asb.updatedBy);
+        AsbMime asbMime = new AsbMime(asb.version, asb.type, asb.desc, asb.packageName,
+                asb.className, asb.actionName, mimeType, asb.updatedBy);
 
         AsbMimeDAO asbMimeDAO = daoFactory.getAsbMimeDAO(asbId);
         long asbMimeId = 0L;
         try {
             asbMimeId = asbMimeDAO.create(asbMime);
-            AsbMime createdAsbMime = (AsbMime)asbMimeDAO.find(asbMimeId);
-            if (!createdAsbMime.equals(asbMime)) {
+            AsbMime insertedRow = (AsbMime)asbMimeDAO.find(asbMimeId);
+            if (!insertedRow.equals(asbMime)) {
                 fail("created object is not same with expected object");
             }
         } catch (DAOException e) {

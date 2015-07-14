@@ -1,6 +1,8 @@
 package com.lge.lai.common.db.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -48,14 +50,15 @@ public class AsbCategoryDAOTest {
     @Test
     public void allOperations() {
         String category = "android.intent.category.MAIN";
-        AsbCategory asbCategory = new AsbCategory(asb.version, asb.type, asb.desc, asb.packageName, asb.className, asb.actionName, category, asb.updatedBy);
-        
+        AsbCategory asbCategory = new AsbCategory(asb.version, asb.type, asb.desc, asb.packageName,
+                asb.className, asb.actionName, category, asb.updatedBy);
+
         AsbCategoryDAO asbCategoryDAO = daoFactory.getAsbCategoryDAO(asbId);
         long asbCategoryId = 0L;
         try {
             asbCategoryId = asbCategoryDAO.create(asbCategory);
-            AsbCategory createdAsbCategory = (AsbCategory)asbCategoryDAO.find(asbCategoryId);
-            if (!createdAsbCategory.equals(asbCategory)) {
+            AsbCategory insertedRow = (AsbCategory)asbCategoryDAO.find(asbCategoryId);
+            if (!insertedRow.equals(asbCategory)) {
                 fail("created object is not same with expected object");
             }
         } catch (DAOException e) {

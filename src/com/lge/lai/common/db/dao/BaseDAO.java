@@ -7,36 +7,41 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 public abstract class BaseDAO {
-	protected DAOFactory daoFactory;
-	
-	public BaseDAO(DAOFactory daoFactory) {
-		this.daoFactory = daoFactory;
-	}
-	
-	public Object find(DaoCallback callback, String sql, Object... values) throws DAOException {
+    protected DAOFactory daoFactory;
+
+    public BaseDAO(DAOFactory daoFactory) {
+        this.daoFactory = daoFactory;
+    }
+
+    protected List<Object> find(DaoCallback callback, String sql, Object... values)
+            throws DAOException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
             connection = daoFactory.getConnection();
             statement = prepareStatement(connection, sql, false, values);
+
+            List<Object> objects = Lists.newArrayList();
             resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return callback.covertToDAO(resultSet);
-            } else {
-                throw new DAOException("Querying failed, no object obtained");
+            while (resultSet.next()) {
+                objects.add(callback.convertToDTO(resultSet));
             }
+            return objects;
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
             close(resultSet, statement, connection);
         }
     }
-	
-	public long create(String sql, Object[] values) {
-		Connection connection = null;
+
+    protected long create(String sql, Object[] values) {
+        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet generatedKeys = null;
         try {
@@ -46,7 +51,7 @@ public abstract class BaseDAO {
             if (affectedRows == 0) {
                 throw new DAOException("Creating failed, no rows affected");
             }
-            
+
             generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 return generatedKeys.getLong(1);
@@ -58,9 +63,9 @@ public abstract class BaseDAO {
         } finally {
             close(generatedKeys, statement, connection);
         }
-	}
-	
-	public void delete(String sql, Object... values) throws DAOException {
+    }
+
+    protected void delete(String sql, Object... values) throws DAOException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -76,8 +81,12 @@ public abstract class BaseDAO {
             close(null, statement, connection);
         }
     }
-	
-	public abstract Object find(long id) throws DAOException;
-	public abstract long create(Object obj) throws DAOException;
-	public abstract void delete(long id) throws DAOException;
+
+    public abstract Object find(long id) throws DAOException;
+
+    public abstract List<Object> list() throws DAOException;
+
+    public abstract long create(Object obj) throws DAOException;
+
+    public abstract void delete(long id) throws DAOException;
 }

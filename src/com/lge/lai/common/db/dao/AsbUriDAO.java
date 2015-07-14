@@ -2,6 +2,7 @@ package com.lge.lai.common.db.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import com.lge.lai.common.db.dto.AsbUri;
 
@@ -13,34 +14,43 @@ public class AsbUriDAO extends BaseDAO implements DaoCallback {
     private static final String TABLE = DB + ".asb_uri";
 
     private static final String SQL_INSERT = "INSERT INTO " + TABLE + " "
-            + "(_asb_id, _uri, _uri_desc) " + "VALUES "
-            + "(?, ?, ?)";
+            + "(_asb_id, _uri, _uri_desc) " + "VALUES " + "(?, ?, ?)";
 
-    private static final String SQL_FIND_BY_ID = "SELECT * FROM (SELECT * FROM "
-            + ASB_TABLE + ") AS ASB_T INNER JOIN (SELECT * FROM "
-            + TABLE + " WHERE _id = ?) AS ASB_URI_T ON ASB_T._id = ASB_URI_T._asb_id";
+    private static final String SQL_FIND_BY_ID = "SELECT * FROM (SELECT * FROM " + ASB_TABLE
+            + ") AS ASB_T INNER JOIN (SELECT * FROM " + TABLE
+            + " WHERE _id = ?) AS ASB_URI_T ON ASB_T._id = ASB_URI_T._asb_id";
+
+    private static final String SQL_LIST_BY_FOREGIGN_KEY = "SELECT * FROM (SELECT * FROM "
+            + ASB_TABLE + ") AS ASB_T INNER JOIN (SELECT * FROM " + TABLE
+            + " WHERE _asb_id = ?) AS ASB_URI_T ON ASB_T._id = ASB_URI_T._asb_id";
+
     private static final String SQL_DELETE_BY_ID = "DELETE FROM " + TABLE + " WHERE _id = ?";
 
     public AsbUriDAO(long asbId, DAOFactory daoFactory) {
-    	super(daoFactory);
+        super(daoFactory);
         this.asbId = asbId;
     }
 
     @Override
     public Object find(long id) throws DAOException {
-        return find(this, SQL_FIND_BY_ID, id);
+        return find(this, SQL_FIND_BY_ID, id).get(0);
+    }
+
+    @Override
+    public List<Object> list() throws DAOException {
+        return find(this, SQL_LIST_BY_FOREGIGN_KEY, asbId);
     }
 
     @Override
     public long create(Object obj) throws DAOException {
-    	if (obj instanceof AsbUri) {
-    		AsbUri asbUri = (AsbUri)obj;
-    		Object[] values = { asbId, asbUri.uri, asbUri.uriDesc };
+        if (obj instanceof AsbUri) {
+            AsbUri asbUri = (AsbUri)obj;
+            Object[] values = { asbId, asbUri.uri, asbUri.uriDesc };
 
-    		return create(SQL_INSERT, values);
-    	} else {
-    		throw new DAOException("instance is not valid: " + obj.getClass().getName());
-    	}
+            return create(SQL_INSERT, values);
+        } else {
+            throw new DAOException("instance is not valid: " + obj.getClass().getName());
+        }
     }
 
     @Override
@@ -48,17 +58,19 @@ public class AsbUriDAO extends BaseDAO implements DaoCallback {
         delete(SQL_DELETE_BY_ID, id);
     }
 
-	@Override
-	public Object covertToDAO(ResultSet rs) throws SQLException {
-		String version = rs.getString("_version");
-		String type = rs.getString("_type");
-		String desc = rs.getString("_desc");
-		String packageName = rs.getString("_pkg_name");
-		String className = rs.getString("_cls_name");
-		String actionName = rs.getString("_action_name");
-		String uri = rs.getString("_uri");
-		String uriDesc = rs.getString("_uri_desc");
-		String updatedBy = rs.getString("_updated_by");
-		return new AsbUri(version, type, desc, packageName, className, actionName, uri, uriDesc, updatedBy);
-	}
+    @Override
+    public Object convertToDTO(ResultSet rs) throws SQLException {
+        long id = rs.getLong("_id");
+        String version = rs.getString("_version");
+        String type = rs.getString("_type");
+        String desc = rs.getString("_desc");
+        String packageName = rs.getString("_pkg_name");
+        String className = rs.getString("_cls_name");
+        String actionName = rs.getString("_action_name");
+        String uri = rs.getString("_uri");
+        String uriDesc = rs.getString("_uri_desc");
+        String updatedBy = rs.getString("_updated_by");
+        return new AsbUri(version, type, desc, packageName, className, actionName, uri, uriDesc,
+                updatedBy, id);
+    }
 }

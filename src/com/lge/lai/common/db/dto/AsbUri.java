@@ -3,6 +3,7 @@ package com.lge.lai.common.db.dto;
 import com.google.common.collect.ComparisonChain;
 
 public class AsbUri extends Asb {
+    public long id;
     public String uri;
     public String uriDesc;
 
@@ -12,6 +13,14 @@ public class AsbUri extends Asb {
         this.uri = uri;
         this.uriDesc = uriDesc;
     }
+    
+    public AsbUri(String version, String type, String desc, String packageName, String className,
+            String actionName, String uri, String uriDesc, String updatedBy, long id) {
+        super(version, type, desc, packageName, className, actionName, updatedBy);
+        this.id = id;
+        this.uri = uri;
+        this.uriDesc = uriDesc;
+    }    
     
     @Override
     public boolean equals(Object obj) {

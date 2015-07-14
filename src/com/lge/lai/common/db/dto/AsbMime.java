@@ -3,6 +3,7 @@ package com.lge.lai.common.db.dto;
 import com.google.common.collect.ComparisonChain;
 
 public class AsbMime extends Asb {
+    public long id;
     public String mimeType;
 
     public AsbMime(String version, String type, String desc, String packageName, String className,
@@ -10,6 +11,14 @@ public class AsbMime extends Asb {
         super(version, type, desc, packageName, className, actionName, updatedBy);
         this.mimeType = mimeType;
     }
+
+    public AsbMime(String version, String type, String desc, String packageName, String className,
+            String actionName, String mimeType, String updatedBy, long id) {
+        super(version, type, desc, packageName, className, actionName, updatedBy);
+        this.id = id;
+        this.mimeType = mimeType;
+    }
+
 
     @Override
     public boolean equals(Object obj) {

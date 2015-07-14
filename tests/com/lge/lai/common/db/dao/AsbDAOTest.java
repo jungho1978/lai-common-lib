@@ -1,6 +1,8 @@
 package com.lge.lai.common.db.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,8 +32,8 @@ public class AsbDAOTest {
         long asbId = 0L;
         try {
             asbId = asbDAO.create(asb);
-            Asb createdAsb = (Asb)asbDAO.find(asbId);
-            if (!createdAsb.equals(asb)) {
+            Asb insertedRow = (Asb)asbDAO.find(asbId);
+            if (!insertedRow.equals(asb)) {
                 fail("created object is not same with expected object");
             }
         } catch (DAOException e) {

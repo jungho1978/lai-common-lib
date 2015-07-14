@@ -2,6 +2,8 @@ package com.lge.lai.common.db.dao;
 
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,14 +51,15 @@ public class AsbUriDAOTest {
     public void allOperations() {
         String uri = "https:///www.google.com";
         String uriDesc = "URI description";
-        AsbUri asbUri = new AsbUri(asb.version, asb.type, asb.desc, asb.packageName, asb.className, asb.actionName, uri, uriDesc, asb.updatedBy);
+        AsbUri asbUri = new AsbUri(asb.version, asb.type, asb.desc, asb.packageName, asb.className,
+                asb.actionName, uri, uriDesc, asb.updatedBy);
 
         AsbUriDAO asbUriDAO = daoFactory.getAsbUriDAO(asbId);
         long asbUriId = 0L;
         try {
             asbUriId = asbUriDAO.create(asbUri);
-            AsbUri createdAsbUri = (AsbUri)asbUriDAO.find(asbUriId);
-            if (!createdAsbUri.equals(asbUri)) {
+            AsbUri insertedRow = (AsbUri)asbUriDAO.find(asbUriId);
+            if (!insertedRow.equals(asbUri)) {
                 fail("created object is not same with expected object");
             }
         } catch (DAOException e) {

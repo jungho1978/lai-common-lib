@@ -3,12 +3,21 @@ package com.lge.lai.common.db.dto;
 import com.google.common.collect.ComparisonChain;
 
 public class Asb extends Base {
+    public long id;
     public String className;
     public String actionName;
 
     public Asb(String version, String type, String desc, String packageName, String className,
             String actionName, String updatedBy) {
         super(version, type, desc, packageName, updatedBy);
+        this.className = className;
+        this.actionName = actionName;
+    }
+
+    public Asb(String version, String type, String desc, String packageName, String className,
+            String actionName, String updatedBy, long id) {
+        super(version, type, desc, packageName, updatedBy);
+        this.id = id;
         this.className = className;
         this.actionName = actionName;
     }
@@ -27,5 +36,13 @@ public class Asb extends Base {
         } else {
             return false;
         }
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return this.id;
     }
 }

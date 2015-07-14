@@ -1,14 +1,23 @@
 package com.lge.lai.common.data;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+
+import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Lists;
 
 public class Feature {
     public String type;
     public String className;
     public String actionName;
-    public List<String> categories = new ArrayList<String>();
-    public List<Data> datas = new ArrayList<Data>();
+    public List<String> categories = Lists.newArrayList();
+    public List<String> schemes = Lists.newArrayList();
+    public List<String> hosts = Lists.newArrayList();
+    public List<String> ports = Lists.newArrayList();
+    public List<String> paths = Lists.newArrayList();
+    public List<String> pathPatterns = Lists.newArrayList();
+    public List<String> pathPrefixes = Lists.newArrayList();
+    public List<String> mimeTypes = Lists.newArrayList();
 
     // For content provider
     public String authorities;
@@ -19,30 +28,107 @@ public class Feature {
         this.categories.add(category);
     }
 
-    public void addData(Data data) {
-        this.datas.add(data);
-    }
-
     public String getCategories() {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < categories.size(); i++) {
-            builder.append(categories.get(i));
-            if (i != categories.size() - 1) {
-                builder.append('\n');
-            }
-        }
-        return builder.toString();
+        return getDatas("category");
     }
 
-    public String getDatas() {
+    public void addScheme(String scheme) {
+        this.schemes.add(scheme);
+    }
+
+    public String getSchemes() {
+        return getDatas("scheme");
+    }
+
+    public void addHost(String host) {
+        this.hosts.add(host);
+    }
+
+    public String getHosts() {
+        return getDatas("host");
+    }
+
+    public void addPort(String port) {
+        this.ports.add(port);
+    }
+
+    public String getPorts() {
+        return getDatas("port");
+    }
+
+    public void addPathPattern(String pathPattern) {
+        this.pathPatterns.add(pathPattern);
+    }
+
+    public String getPathPatterns() {
+        return getDatas("pathPattern");
+    }
+
+    public void addPathPrefix(String pathPrefix) {
+        this.pathPrefixes.add(pathPrefix);
+    }
+
+    public String getPathPrefixes() {
+        return getDatas("pathPrefix");
+    }
+
+    public void addMimeType(String mimeType) {
+        this.mimeTypes.add(mimeType);
+    }
+
+    public String getMimeTypes() {
+        return getDatas("mimeType");
+    }
+
+    private String getDatas(String type) {
+        List<String> datas;
+        if (type.equalsIgnoreCase("category")) {
+            datas = categories;
+        } else if (type.equalsIgnoreCase("scheme")) {
+            datas = schemes;
+        } else if (type.equalsIgnoreCase("host")) {
+            datas = hosts;
+        } else if (type.equalsIgnoreCase("port")) {
+            datas = ports;
+        } else if (type.equalsIgnoreCase("pathPattern")) {
+            datas = pathPatterns;
+        } else if (type.equalsIgnoreCase("pathPrefix")) {
+            datas = pathPrefixes;
+        } else if (type.equalsIgnoreCase("mimeType")) {
+            datas = mimeTypes;
+        } else {
+            return "";
+        }
+
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < datas.size(); i++) {
-            builder.append(datas.get(i).toString());
+            builder.append(datas.get(i));
             if (i != datas.size() - 1) {
                 builder.append('\n');
             }
         }
         return builder.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Feature) {
+            Feature other = (Feature)obj;
+
+            return ComparisonChain.start().compare(type, other.type)
+                    .compare(className, other.className)
+                    .compare(actionName, other.actionName)
+                    .compare(schemes, other.schemes, STRING_LIST_COMPARATOR)
+                    .compare(hosts, other.hosts, STRING_LIST_COMPARATOR)
+                    .compare(ports, other.ports, STRING_LIST_COMPARATOR)
+                    .compare(paths, other.paths, STRING_LIST_COMPARATOR)
+                    .compare(pathPatterns, other.pathPatterns, STRING_LIST_COMPARATOR)
+                    .compare(pathPrefixes, other.pathPrefixes, STRING_LIST_COMPARATOR)
+                    .compare(mimeTypes, other.mimeTypes, STRING_LIST_COMPARATOR)
+                    .result() == 0;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -54,8 +140,23 @@ public class Feature {
         for (String category : categories) {
             builder.append("[category]\t\t" + category + '\n');
         }
-        for (Data data : datas) {
-            builder.append(data.toString());
+        for (String scheme : schemes) {
+            builder.append("[scheme]\t\t" + scheme + '\n');
+        }
+        for (String host : hosts) {
+            builder.append("[host]\t\t" + host + '\n');
+        }
+        for (String port : ports) {
+            builder.append("[port]\t\t" + port + '\n');
+        }
+        for (String pathPattern : pathPatterns) {
+            builder.append("[pathPattern]\t\t" + pathPattern + '\n');
+        }
+        for (String pathPrefix : pathPrefixes) {
+            builder.append("[pathPrefix]\t\t" + pathPrefix + '\n');
+        }
+        for (String mimeType : mimeTypes) {
+            builder.append("[mimeType]\t\t" + mimeType + '\n');
         }
         insertNewLineIfNeeded(builder);
         if (type.equals("provider")) {
@@ -71,4 +172,20 @@ public class Feature {
             builder.append('\n');
         }
     }
+
+    private static Comparator<List<String>> STRING_LIST_COMPARATOR = new Comparator<List<String>>() {
+        @Override
+        public int compare(List<String> myStrings, List<String> yourStrings) {
+            if (myStrings.size() != yourStrings.size()) {
+                return -1;
+            }
+            for (String str : yourStrings) {
+                if (!myStrings.contains(str)) {
+                    return -1;
+                }
+            }
+            return 0;
+        }
+
+    };
 }

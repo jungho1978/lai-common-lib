@@ -3,6 +3,7 @@ package com.lge.lai.common.db.dto;
 import com.google.common.collect.ComparisonChain;
 
 public class AsbCategory extends Asb {
+    public long id;
     public String category;
 
     public AsbCategory(String version, String type, String desc, String packageName,
@@ -10,6 +11,13 @@ public class AsbCategory extends Asb {
         super(version, type, desc, packageName, className, actionName, updatedBy);
         this.category = category;
     }
+    
+    public AsbCategory(String version, String type, String desc, String packageName,
+            String className, String actionName, String category, String updatedBy, long id) {
+        super(version, type, desc, packageName, className, actionName, updatedBy);
+        this.id = id;
+        this.category = category;
+    }    
 
     @Override
     public boolean equals(Object obj) {
