@@ -32,4 +32,9 @@ public class DAOPropertiesTest {
     public void getPasswordAsProperty() {
         assertEquals("guest", properties.getProperty("password", true));
     }
+    
+    @Test
+    public void getDebugAsProperty() {
+        assertEquals(true, Boolean.valueOf(properties.getProperty("debug", false)));
+    }
 }

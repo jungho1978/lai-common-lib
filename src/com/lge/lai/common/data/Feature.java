@@ -29,7 +29,7 @@ public class Feature {
     }
 
     public String getCategories() {
-        return getDatas("category");
+        return getDataValues("category");
     }
 
     public void addScheme(String scheme) {
@@ -37,7 +37,7 @@ public class Feature {
     }
 
     public String getSchemes() {
-        return getDatas("scheme");
+        return getDataValues("scheme");
     }
 
     public void addHost(String host) {
@@ -45,7 +45,7 @@ public class Feature {
     }
 
     public String getHosts() {
-        return getDatas("host");
+        return getDataValues("host");
     }
 
     public void addPort(String port) {
@@ -53,7 +53,15 @@ public class Feature {
     }
 
     public String getPorts() {
-        return getDatas("port");
+        return getDataValues("port");
+    }
+
+    public void addPath(String path) {
+        this.paths.add(path);
+    }
+
+    public String getPaths() {
+        return getDataValues("path");
     }
 
     public void addPathPattern(String pathPattern) {
@@ -61,7 +69,7 @@ public class Feature {
     }
 
     public String getPathPatterns() {
-        return getDatas("pathPattern");
+        return getDataValues("pathPattern");
     }
 
     public void addPathPrefix(String pathPrefix) {
@@ -69,7 +77,7 @@ public class Feature {
     }
 
     public String getPathPrefixes() {
-        return getDatas("pathPrefix");
+        return getDataValues("pathPrefix");
     }
 
     public void addMimeType(String mimeType) {
@@ -77,10 +85,10 @@ public class Feature {
     }
 
     public String getMimeTypes() {
-        return getDatas("mimeType");
+        return getDataValues("mimeType");
     }
 
-    private String getDatas(String type) {
+    private String getDataValues(String type) {
         List<String> datas;
         if (type.equalsIgnoreCase("category")) {
             datas = categories;
@@ -90,6 +98,8 @@ public class Feature {
             datas = hosts;
         } else if (type.equalsIgnoreCase("port")) {
             datas = ports;
+        } else if (type.equalsIgnoreCase("path")) {
+            datas = paths;
         } else if (type.equalsIgnoreCase("pathPattern")) {
             datas = pathPatterns;
         } else if (type.equalsIgnoreCase("pathPrefix")) {
@@ -116,16 +126,14 @@ public class Feature {
             Feature other = (Feature)obj;
 
             return ComparisonChain.start().compare(type, other.type)
-                    .compare(className, other.className)
-                    .compare(actionName, other.actionName)
+                    .compare(className, other.className).compare(actionName, other.actionName)
                     .compare(schemes, other.schemes, STRING_LIST_COMPARATOR)
                     .compare(hosts, other.hosts, STRING_LIST_COMPARATOR)
                     .compare(ports, other.ports, STRING_LIST_COMPARATOR)
                     .compare(paths, other.paths, STRING_LIST_COMPARATOR)
                     .compare(pathPatterns, other.pathPatterns, STRING_LIST_COMPARATOR)
                     .compare(pathPrefixes, other.pathPrefixes, STRING_LIST_COMPARATOR)
-                    .compare(mimeTypes, other.mimeTypes, STRING_LIST_COMPARATOR)
-                    .result() == 0;
+                    .compare(mimeTypes, other.mimeTypes, STRING_LIST_COMPARATOR).result() == 0;
         } else {
             return false;
         }
