@@ -1,5 +1,6 @@
 package com.lge.lai.common.db.dto;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
 
 public class Asb extends Base {
@@ -20,6 +21,19 @@ public class Asb extends Base {
         this.id = id;
         this.className = className;
         this.actionName = actionName;
+    }
+    
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("version", version)
+                .add("type", type)
+                .add("desc", desc)
+                .add("packageName", packageName)
+                .add("className", className)
+                .add("actionName", actionName)
+                .add("updatedBy", updatedBy)
+                .toString();
     }
 
     @Override

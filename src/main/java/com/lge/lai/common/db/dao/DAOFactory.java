@@ -47,6 +47,10 @@ public abstract class DAOFactory {
     public AsbUriDAO getAsbUriDAO(long asbId) {
         return new AsbUriDAO(asbId, this);
     }
+    
+    public ProviderDAO getProviderDAO() {
+        return new ProviderDAO(this);
+    }
 }
 
 class DriverManagerDAOFactory extends DAOFactory {

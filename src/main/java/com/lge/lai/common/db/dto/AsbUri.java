@@ -1,5 +1,6 @@
 package com.lge.lai.common.db.dto;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
 
 public class AsbUri extends Asb {
@@ -13,15 +14,30 @@ public class AsbUri extends Asb {
         this.uri = uri;
         this.uriDesc = uriDesc;
     }
-    
+
     public AsbUri(String version, String type, String desc, String packageName, String className,
             String actionName, String uri, String uriDesc, String updatedBy, long id) {
         super(version, type, desc, packageName, className, actionName, updatedBy);
         this.id = id;
         this.uri = uri;
         this.uriDesc = uriDesc;
-    }    
-    
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("version", version)
+                .add("type", type)
+                .add("desc", desc)
+                .add("packageName", packageName)
+                .add("className", className)
+                .add("actionName", actionName)
+                .add("uri", uri)
+                .add("uriDesc", uriDesc)
+                .add("updatedBy", updatedBy)
+                .toString();
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AsbUri) {

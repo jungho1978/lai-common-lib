@@ -1,5 +1,6 @@
 package com.lge.lai.common.db.dto;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
 
 public class AsbMime extends Asb {
@@ -19,6 +20,19 @@ public class AsbMime extends Asb {
         this.mimeType = mimeType;
     }
 
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("version", version)
+                .add("type", type)
+                .add("desc", desc)
+                .add("packageName", packageName)
+                .add("className", className)
+                .add("actionName", actionName)
+                .add("mimeType", mimeType)
+                .add("updatedBy", updatedBy)
+                .toString();
+    }
 
     @Override
     public boolean equals(Object obj) {
