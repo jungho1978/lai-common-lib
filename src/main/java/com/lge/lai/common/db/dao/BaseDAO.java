@@ -9,9 +9,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.collect.Lists;
 
 public abstract class BaseDAO {
+	static Logger LOGGER = LogManager.getLogger(BaseDAO.class.getName());
     protected DAOFactory daoFactory;
 
     public BaseDAO(DAOFactory daoFactory) {
@@ -26,7 +30,8 @@ public abstract class BaseDAO {
         try {
             connection = daoFactory.getConnection();
             statement = prepareStatement(connection, sql, false, values);
-
+            LOGGER.info(statement.toString());
+            
             List<Object> objects = Lists.newArrayList();
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
