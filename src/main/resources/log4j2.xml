@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
+<Configuration status="warn" name="lai-common-lib" packages="">
 	<Properties>
 		<Property name="log-path">logs</Property>
 	</Properties>
 	<Appenders>
 		<Console name="console-log" target="SYSTEM_OUT">
-			<PatternLayout
-				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+			</PatternLayout>
 		</Console>
-		<RollingFile name="console-log" fileName="${log-path}/log-console.log"
+		<RollingFile name="trace-log" fileName="${log-path}/log-trace.log"
 			filePattern="${log-path}/log-console-%d{yyyy-MM-dd}.log">
 			<PatternLayout>
 				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
@@ -28,12 +29,14 @@
 		</RollingFile>
 	</Appenders>
 	<Loggers>
-		<Logger name="jungho" level="debug" additivity="false">
-			<appender-ref ref="trace-log" level="debug" />
-			<appender-ref ref="error-log" level="error" />
-			<appender-ref ref="console-log" level="debug" />
+		<Logger name="jungho" level="trace" additivity="false">
+		    <appender-ref ref="trace-log" level="trace" />
+			<appender-ref ref="error-log" level="trace" />
+			<appender-ref ref="console-log" level="trace" />
 		</Logger>
-		<Root level="info" additivity="false">
+		<Root level="trace" additivity="false">
+			<AppenderRef ref="trace-log" />
+			<AppenderRef ref="error-log" />
 			<AppenderRef ref="console-log" />
 		</Root>
 	</Loggers>

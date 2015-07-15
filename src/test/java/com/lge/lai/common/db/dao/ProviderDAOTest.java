@@ -33,21 +33,14 @@ public class ProviderDAOTest {
                 readPermission, writePermission, authorities, primaryKey, updatedBy);
 
         ProviderDAO providerDAO = daoFactory.getProviderDAO();
-        long providerId = 0L;
-        try {
-            providerId = providerDAO.create(provider);
-            Provider insertedRow = (Provider)providerDAO.find(providerId);
-            if (!insertedRow.equals(provider)) {
-                fail("created object is not same with expected object");
-            }
-        } catch (DAOException e) {
-            fail("creating failed: " + e);
-        } finally {
-            try {
-                providerDAO.delete(providerId);
-            } catch (DAOException e) {
-                fail("deleting failed: " + e);
-            }
+        long providerId = providerDAO.create(provider);
+        if (providerId == -1) {
+            fail("duplicated entry exists");
         }
+        Provider insertedRow = (Provider)providerDAO.find(providerId);
+        if (!insertedRow.equals(provider)) {
+            fail("created object is not same with expected object");
+        }
+        providerDAO.delete(providerId);
     }
 }

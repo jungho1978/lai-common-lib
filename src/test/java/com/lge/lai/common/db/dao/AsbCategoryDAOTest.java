@@ -30,21 +30,16 @@ public class AsbCategoryDAOTest {
         asb = new Asb(version, type, desc, packageName, className, actionName, updatedBy);
 
         AsbDAO asbDAO = daoFactory.getAsbDAO();
-        try {
-            asbId = asbDAO.create(asb);
-        } catch (DAOException e) {
-            fail("creating asb failed: " + e);
+        asbId = asbDAO.create(asb);
+        if (asbId == -1) {
+            fail("duplicated entry exists");
         }
     }
 
     @After
     public void tearDown() {
         AsbDAO asbDAO = daoFactory.getAsbDAO();
-        try {
-            asbDAO.delete(asbId);
-        } catch (DAOException e) {
-            fail("deleting asb failed: " + e);
-        }
+        asbDAO.delete(asbId);
     }
 
     @Test
@@ -54,21 +49,14 @@ public class AsbCategoryDAOTest {
                 asb.className, asb.actionName, category, asb.updatedBy);
 
         AsbCategoryDAO asbCategoryDAO = daoFactory.getAsbCategoryDAO(asbId);
-        long asbCategoryId = 0L;
-        try {
-            asbCategoryId = asbCategoryDAO.create(asbCategory);
-            AsbCategory insertedRow = (AsbCategory)asbCategoryDAO.find(asbCategoryId);
-            if (!insertedRow.equals(asbCategory)) {
-                fail("created object is not same with expected object");
-            }
-        } catch (DAOException e) {
-            fail("creating asbCategory failed: " + e);
-        } finally {
-            try {
-                asbCategoryDAO.delete(asbCategoryId);
-            } catch (DAOException e) {
-                fail("deleting asbCategory failed: " + e);
-            }
+        long asbCategoryId = asbCategoryDAO.create(asbCategory);
+        if (asbCategoryId == -1) {
+            fail("duplicated entry exists");
         }
+        AsbCategory insertedRow = (AsbCategory)asbCategoryDAO.find(asbCategoryId);
+        if (!insertedRow.equals(asbCategory)) {
+            fail("created object is not same with expected object");
+        }
+        asbCategoryDAO.delete(asbCategoryId);
     }
 }

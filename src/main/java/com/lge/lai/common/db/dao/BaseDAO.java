@@ -13,9 +13,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
+import com.mysql.jdbc.MysqlErrorNumbers;
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 
 public abstract class BaseDAO {
-	static Logger LOGGER = LogManager.getLogger(BaseDAO.class.getName());
+    static Logger LOGGER = LogManager.getLogger(BaseDAO.class.getName());
     protected DAOFactory daoFactory;
 
     public BaseDAO(DAOFactory daoFactory) {
@@ -31,7 +33,7 @@ public abstract class BaseDAO {
             connection = daoFactory.getConnection();
             statement = prepareStatement(connection, sql, false, values);
             LOGGER.info(statement.toString());
-            
+
             List<Object> objects = Lists.newArrayList();
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -39,19 +41,22 @@ public abstract class BaseDAO {
             }
             return objects;
         } catch (SQLException e) {
+            LOGGER.error(e);
             throw new DAOException(e);
         } finally {
             close(resultSet, statement, connection);
         }
     }
 
-    protected long create(String sql, Object[] values) {
+    protected long create(String sql, Object[] values) throws DAOException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet generatedKeys = null;
         try {
             connection = daoFactory.getConnection();
             statement = prepareStatement(connection, sql, true, values);
+            LOGGER.info(statement.toString());
+
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
                 throw new DAOException("Creating failed, no rows affected");
@@ -64,7 +69,13 @@ public abstract class BaseDAO {
                 throw new DAOException("Creating failed, no generated key obtained");
             }
         } catch (SQLException e) {
-            throw new DAOException(e);
+            if (e.getErrorCode() == MysqlErrorNumbers.ER_DUP_ENTRY) {
+                LOGGER.error("Duplicated entry exist: e" + e);
+                return -1;
+            } else {
+                LOGGER.error("Unknown SQL exception: " + e);
+                throw new DAOException(e);
+            }
         } finally {
             close(generatedKeys, statement, connection);
         }
@@ -76,11 +87,14 @@ public abstract class BaseDAO {
         try {
             connection = daoFactory.getConnection();
             statement = prepareStatement(connection, sql, false, values);
+            LOGGER.info(statement.toString());
+
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
                 throw new DAOException("Deleting failed, no rows affected.");
             }
         } catch (SQLException e) {
+            LOGGER.error(e);
             throw new DAOException(e);
         } finally {
             close(null, statement, connection);

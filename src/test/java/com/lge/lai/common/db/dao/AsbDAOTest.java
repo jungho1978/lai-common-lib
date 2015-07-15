@@ -29,21 +29,14 @@ public class AsbDAOTest {
         Asb asb = new Asb(version, type, desc, packageName, className, actionName, updatedBy);
 
         AsbDAO asbDAO = daoFactory.getAsbDAO();
-        long asbId = 0L;
-        try {
-            asbId = asbDAO.create(asb);
-            Asb insertedRow = (Asb)asbDAO.find(asbId);
-            if (!insertedRow.equals(asb)) {
-                fail("created object is not same with expected object");
-            }
-        } catch (DAOException e) {
-            fail("creation failed: " + e);
-        } finally {
-            try {
-                asbDAO.delete(asbId);
-            } catch (DAOException e) {
-                fail("deletion failed: " + e);
-            }
+        long asbId = asbDAO.create(asb);
+        if (asbId == -1) {
+            fail("duplicated entry exists");
         }
+        Asb insertedRow = (Asb)asbDAO.find(asbId);
+        if (!insertedRow.equals(asb)) {
+            fail("created object is not same with expected object");
+        }
+        asbDAO.delete(asbId);
     }
 }

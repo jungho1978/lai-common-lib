@@ -1,6 +1,7 @@
 package com.lge.lai.common.db.dao;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,16 +21,17 @@ public class DAOPropertiesTest {
 
     @Test
     public void getUrlAsProperty() {
-        assertEquals("jdbc:mysql://905205.iptime.org", properties.getProperty("url", true));
+        assertThat(properties.getProperty("url", true), either(is("jdbc:mysql://10.168.142.78"))
+                .or(is("jdbc:mysql://905205.iptime.org")));
     }
 
     @Test
     public void getUsernameAsProperty() {
-        assertEquals("guest", properties.getProperty("username", true));
+        assertThat(properties.getProperty("username", true), either(is("ase")).or(is("guest")));
     }
 
     @Test
     public void getPasswordAsProperty() {
-        assertEquals("guest", properties.getProperty("password", true));
+        assertThat(properties.getProperty("password", true), either(is("2014ase")).or(is("guest")));
     }
 }

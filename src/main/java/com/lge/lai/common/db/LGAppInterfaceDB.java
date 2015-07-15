@@ -85,6 +85,9 @@ public class LGAppInterfaceDB {
         Asb asb = new Asb(versionName, type, DEFAULT_DESC, packageName, className, actionName,
                 UPDATED_BY_MANIFEST);
         long asbId = daoFactory.getAsbDAO().create(asb);
+        if (asbId == -1) {
+            return;
+        }
 
         for (String category : feature.categories) {
             AsbCategory asbCategory = new AsbCategory(versionName, type, DEFAULT_DESC, packageName,

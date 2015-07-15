@@ -30,10 +30,9 @@ public class AsbUriDAOTest {
         asb = new Asb(version, type, desc, packageName, className, actionName, updatedBy);
 
         AsbDAO asbDAO = daoFactory.getAsbDAO();
-        try {
-            asbId = asbDAO.create(asb);
-        } catch (DAOException e) {
-            fail("creating asb failed: " + e);
+        asbId = asbDAO.create(asb);
+        if (asbId == -1) {
+            fail("duplicated entry exists");
         }
     }
 
@@ -55,21 +54,14 @@ public class AsbUriDAOTest {
                 asb.actionName, uri, uriDesc, asb.updatedBy);
 
         AsbUriDAO asbUriDAO = daoFactory.getAsbUriDAO(asbId);
-        long asbUriId = 0L;
-        try {
-            asbUriId = asbUriDAO.create(asbUri);
-            AsbUri insertedRow = (AsbUri)asbUriDAO.find(asbUriId);
-            if (!insertedRow.equals(asbUri)) {
-                fail("created object is not same with expected object");
-            }
-        } catch (DAOException e) {
-            fail("creating asbMime failed: " + e);
-        } finally {
-            try {
-                asbUriDAO.delete(asbUriId);
-            } catch (DAOException e) {
-                fail("deleting asbMime failed: " + e);
-            }
+        long asbUriId = asbUriDAO.create(asbUri);
+        if (asbUriId == -1) {
+            fail("duplicated entry exists");
         }
+        AsbUri insertedRow = (AsbUri)asbUriDAO.find(asbUriId);
+        if (!insertedRow.equals(asbUri)) {
+            fail("created object is not same with expected object");
+        }
+        asbUriDAO.delete(asbUriId);
     }
 }
