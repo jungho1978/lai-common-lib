@@ -5,38 +5,24 @@
 	</Properties>
 	<Appenders>
 		<Console name="console-log" target="SYSTEM_OUT">
-			<PatternLayout>
-				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
-			</PatternLayout>
+		    <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss} %c{1} - %msg%n" />
 		</Console>
 		<RollingFile name="trace-log" fileName="${log-path}/log-trace.log"
-			filePattern="${log-path}/log-console-%d{yyyy-MM-dd}.log">
-			<PatternLayout>
-				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
-			</PatternLayout>
-			<Policies>
+		    filePattern="${log-path}/log-trace-%d{yyyy-MM-dd}.log">
+		    <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss} %c{1} - %msg%n" />
+		    <Policies>
 				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
-			</Policies>
-		</RollingFile>
-		<RollingFile name="error-log" fileName="${log-path}/log-error.log"
-			filePattern="${log-path}/log-error-%d{yyyy-MM-dd}.log">
-			<PatternLayout>
-				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
-			</PatternLayout>
-			<Policies>
-				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
-			</Policies>
+				<SizeBasedTriggeringPolicy size="50 MB" />
+			   </Policies>
 		</RollingFile>
 	</Appenders>
 	<Loggers>
 		<Logger name="jungho" level="trace" additivity="false">
 		    <appender-ref ref="trace-log" level="trace" />
-			<appender-ref ref="error-log" level="trace" />
 			<appender-ref ref="console-log" level="trace" />
 		</Logger>
 		<Root level="trace" additivity="false">
 			<AppenderRef ref="trace-log" />
-			<AppenderRef ref="error-log" />
 			<AppenderRef ref="console-log" />
 		</Root>
 	</Loggers>
