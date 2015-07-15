@@ -8,16 +8,16 @@ public class Asb extends Base {
     public String className;
     public String actionName;
 
-    public Asb(String version, String type, String desc, String packageName, String className,
+    public Asb(String versionName, String type, String desc, String packageName, String className,
             String actionName, String updatedBy) {
-        super(version, type, desc, packageName, updatedBy);
+        super(versionName, type, desc, packageName, updatedBy);
         this.className = className;
         this.actionName = actionName;
     }
 
-    public Asb(String version, String type, String desc, String packageName, String className,
+    public Asb(String versionName, String type, String desc, String packageName, String className,
             String actionName, String updatedBy, long id) {
-        super(version, type, desc, packageName, updatedBy);
+        super(versionName, type, desc, packageName, updatedBy);
         this.id = id;
         this.className = className;
         this.actionName = actionName;
@@ -26,7 +26,7 @@ public class Asb extends Base {
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("version", version)
+                .add("versionName", versionName)
                 .add("type", type)
                 .add("desc", desc)
                 .add("packageName", packageName)
@@ -41,7 +41,7 @@ public class Asb extends Base {
         if (obj instanceof Asb) {
             Asb other = (Asb)obj;
             return ComparisonChain.start()
-                    .compare(version, other.version)
+                    .compare(versionName, other.versionName)
                     .compare(type, other.type)
                     .compare(packageName, other.packageName)
                     .compare(className, other.className)

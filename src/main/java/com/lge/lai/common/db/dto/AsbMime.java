@@ -7,15 +7,15 @@ public class AsbMime extends Asb {
     public long id;
     public String mimeType;
 
-    public AsbMime(String version, String type, String desc, String packageName, String className,
+    public AsbMime(String versionName, String type, String desc, String packageName, String className,
             String actionName, String mimeType, String updatedBy) {
-        super(version, type, desc, packageName, className, actionName, updatedBy);
+        super(versionName, type, desc, packageName, className, actionName, updatedBy);
         this.mimeType = mimeType;
     }
 
-    public AsbMime(String version, String type, String desc, String packageName, String className,
+    public AsbMime(String versionName, String type, String desc, String packageName, String className,
             String actionName, String mimeType, String updatedBy, long id) {
-        super(version, type, desc, packageName, className, actionName, updatedBy);
+        super(versionName, type, desc, packageName, className, actionName, updatedBy);
         this.id = id;
         this.mimeType = mimeType;
     }
@@ -23,7 +23,7 @@ public class AsbMime extends Asb {
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("version", version)
+                .add("versionName", versionName)
                 .add("type", type)
                 .add("desc", desc)
                 .add("packageName", packageName)
@@ -39,7 +39,7 @@ public class AsbMime extends Asb {
         if (obj instanceof AsbMime) {
             AsbMime other = (AsbMime)obj;
             return ComparisonChain.start()
-                    .compare(version, other.version)
+                    .compare(versionName, other.versionName)
                     .compare(type, other.type)
                     .compare(packageName, other.packageName)
                     .compare(className, other.className)

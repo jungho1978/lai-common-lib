@@ -49,7 +49,7 @@ public class ProviderDAO extends BaseDAO implements DaoCallback {
         if (obj instanceof Provider) {
             Provider provider = (Provider)obj;
             Object[] values = {
-                    provider.version,
+                    provider.versionName,
                     provider.type,
                     provider.desc,
                     provider.packageName,

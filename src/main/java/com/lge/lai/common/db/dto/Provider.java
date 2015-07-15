@@ -24,10 +24,10 @@ public class Provider extends Base {
         this.primaryKey = primaryKey;
     }
     
-    public Provider(String version, String type, String desc, String packageName, String className,
+    public Provider(String versionName, String type, String desc, String packageName, String className,
             String tableName, String readPermisson, String writePermission, String authorities,
             String primaryKey, String updatedBy, long id) {
-        super(version, type, desc, packageName, updatedBy);
+        super(versionName, type, desc, packageName, updatedBy);
         this.id = id;
         this.className = className;
         this.tableName = tableName;
@@ -40,7 +40,7 @@ public class Provider extends Base {
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("version", version)
+                .add("versionName", versionName)
                 .add("type", type)
                 .add("desc", desc)
                 .add("packageName", packageName)
@@ -59,7 +59,7 @@ public class Provider extends Base {
         if (obj instanceof Provider) {
             Provider other = (Provider)obj;
             return ComparisonChain.start()
-                    .compare(version, other.version)
+                    .compare(versionName, other.versionName)
                     .compare(type, other.type)
                     .compare(packageName, other.packageName)
                     .compare(className, other.className)

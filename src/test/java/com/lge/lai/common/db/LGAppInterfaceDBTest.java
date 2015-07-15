@@ -38,22 +38,30 @@ public class LGAppInterfaceDBTest {
     }
 
     private FeatureProvider getDummyData() {
-        FeatureProvider provider = new FeatureProvider();
-        provider.packageName = "com.example.helloworld";
-        provider.versionName = "1.0.0";
+        FeatureProvider fp = new FeatureProvider();
+        fp.packageName = "com.example.helloworld";
+        fp.versionName = "1.0.0";
 
-        Feature feature = new Feature();
-        feature.type = "activity";
-        feature.className = provider.packageName + ".MainActivity";
-        feature.actionName = "android.intent.ACTION.GET_CONTENT";
-        feature.addCategory("android.intent.CATEGORY.MAIN");
-        feature.addCategory("android.intent.CATEGORY.DEFAULT");
-        feature.addScheme("http");
-        feature.addScheme("file");
-        feature.addMimeType("image/*");
-        feature.addMimeType("audio/*");
-
-        provider.addFeature(feature);
-        return provider;
+        Feature asbFeature = new Feature();
+        asbFeature.type = "activity";
+        asbFeature.className = fp.packageName + ".MainActivity";
+        asbFeature.actionName = "android.intent.ACTION.GET_CONTENT";
+        asbFeature.addCategory("android.intent.CATEGORY.MAIN");
+        asbFeature.addCategory("android.intent.CATEGORY.DEFAULT");
+        asbFeature.addScheme("http");
+        asbFeature.addScheme("file");
+        asbFeature.addMimeType("image/*");
+        asbFeature.addMimeType("audio/*");
+        fp.addFeature(asbFeature);
+        
+        Feature providerFeature = new Feature();
+        providerFeature.type = "provider";
+        providerFeature.className = fp.packageName + ".MainProvider";
+        providerFeature.readPermission = "android.permission.READ";
+        providerFeature.writePermission = "android.permission.WRITE";
+        providerFeature.authorities = "hellworld.authrotieis";
+        fp.addFeature(providerFeature);
+        
+        return fp;
     }
 }

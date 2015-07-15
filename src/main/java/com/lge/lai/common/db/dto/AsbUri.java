@@ -8,16 +8,16 @@ public class AsbUri extends Asb {
     public String uri;
     public String uriDesc;
 
-    public AsbUri(String version, String type, String desc, String packageName, String className,
+    public AsbUri(String versionName, String type, String desc, String packageName, String className,
             String actionName, String uri, String uriDesc, String updatedBy) {
-        super(version, type, desc, packageName, className, actionName, updatedBy);
+        super(versionName, type, desc, packageName, className, actionName, updatedBy);
         this.uri = uri;
         this.uriDesc = uriDesc;
     }
 
-    public AsbUri(String version, String type, String desc, String packageName, String className,
+    public AsbUri(String versionName, String type, String desc, String packageName, String className,
             String actionName, String uri, String uriDesc, String updatedBy, long id) {
-        super(version, type, desc, packageName, className, actionName, updatedBy);
+        super(versionName, type, desc, packageName, className, actionName, updatedBy);
         this.id = id;
         this.uri = uri;
         this.uriDesc = uriDesc;
@@ -26,7 +26,7 @@ public class AsbUri extends Asb {
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("version", version)
+                .add("versionName", versionName)
                 .add("type", type)
                 .add("desc", desc)
                 .add("packageName", packageName)
@@ -43,7 +43,7 @@ public class AsbUri extends Asb {
         if (obj instanceof AsbUri) {
             AsbUri other = (AsbUri)obj;
             return ComparisonChain.start()
-                    .compare(version, other.version)
+                    .compare(versionName, other.versionName)
                     .compare(type, other.type)
                     .compare(packageName, other.packageName)
                     .compare(className, other.className)

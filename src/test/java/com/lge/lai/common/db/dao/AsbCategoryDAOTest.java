@@ -50,7 +50,7 @@ public class AsbCategoryDAOTest {
     @Test
     public void allOperations() {
         String category = "android.intent.category.MAIN";
-        AsbCategory asbCategory = new AsbCategory(asb.version, asb.type, asb.desc, asb.packageName,
+        AsbCategory asbCategory = new AsbCategory(asb.versionName, asb.type, asb.desc, asb.packageName,
                 asb.className, asb.actionName, category, asb.updatedBy);
 
         AsbCategoryDAO asbCategoryDAO = daoFactory.getAsbCategoryDAO(asbId);

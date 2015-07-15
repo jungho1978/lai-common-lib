@@ -50,7 +50,7 @@ public class AsbMimeDAOTest {
     @Test
     public void allOperations() {
         String mimeType = "image/*";
-        AsbMime asbMime = new AsbMime(asb.version, asb.type, asb.desc, asb.packageName,
+        AsbMime asbMime = new AsbMime(asb.versionName, asb.type, asb.desc, asb.packageName,
                 asb.className, asb.actionName, mimeType, asb.updatedBy);
 
         AsbMimeDAO asbMimeDAO = daoFactory.getAsbMimeDAO(asbId);

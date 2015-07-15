@@ -44,7 +44,7 @@ public class AsbDAO extends BaseDAO implements DaoCallback {
         if (obj instanceof Asb) {
             Asb asb = (Asb)obj;
             Object[] values = {
-                    asb.version,
+                    asb.versionName,
                     asb.type,
                     asb.desc,
                     asb.packageName,

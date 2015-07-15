@@ -7,15 +7,15 @@ public class AsbCategory extends Asb {
     public long id;
     public String category;
 
-    public AsbCategory(String version, String type, String desc, String packageName,
+    public AsbCategory(String versionName, String type, String desc, String packageName,
             String className, String actionName, String category, String updatedBy) {
-        super(version, type, desc, packageName, className, actionName, updatedBy);
+        super(versionName, type, desc, packageName, className, actionName, updatedBy);
         this.category = category;
     }
 
-    public AsbCategory(String version, String type, String desc, String packageName,
+    public AsbCategory(String versionName, String type, String desc, String packageName,
             String className, String actionName, String category, String updatedBy, long id) {
-        super(version, type, desc, packageName, className, actionName, updatedBy);
+        super(versionName, type, desc, packageName, className, actionName, updatedBy);
         this.id = id;
         this.category = category;
     }
@@ -23,7 +23,7 @@ public class AsbCategory extends Asb {
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("version", version)
+                .add("versionName", versionName)
                 .add("type", type)
                 .add("desc", desc)
                 .add("packageName", packageName)
@@ -39,7 +39,7 @@ public class AsbCategory extends Asb {
         if (obj instanceof AsbCategory) {
             AsbCategory other = (AsbCategory)obj;
             return ComparisonChain.start()
-                    .compare(version, other.version)
+                    .compare(versionName, other.versionName)
                     .compare(type, other.type)
                     .compare(packageName, other.packageName)
                     .compare(className, other.className)

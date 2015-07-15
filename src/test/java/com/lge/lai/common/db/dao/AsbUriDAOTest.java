@@ -51,7 +51,7 @@ public class AsbUriDAOTest {
     public void allOperations() {
         String uri = "https:///www.google.com";
         String uriDesc = "URI description";
-        AsbUri asbUri = new AsbUri(asb.version, asb.type, asb.desc, asb.packageName, asb.className,
+        AsbUri asbUri = new AsbUri(asb.versionName, asb.type, asb.desc, asb.packageName, asb.className,
                 asb.actionName, uri, uriDesc, asb.updatedBy);
 
         AsbUriDAO asbUriDAO = daoFactory.getAsbUriDAO(asbId);
