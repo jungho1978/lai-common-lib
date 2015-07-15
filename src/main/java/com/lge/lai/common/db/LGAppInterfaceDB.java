@@ -46,7 +46,7 @@ public class LGAppInterfaceDB {
     }
 
     public static FeatureProvider find(String packageName, String versionName) {
-        if (isEmpty(packageName) || isEmpty(versionName)) {
+        if (isEmpty(packageName)) {
             throw new LGAppInterfaceDBException("argument error");
         }
 
@@ -158,7 +158,7 @@ public class LGAppInterfaceDB {
     }
 
     public static void delete(String packageName, String versionName) {
-        if (isEmpty(packageName) || isEmpty(versionName)) {
+        if (isEmpty(packageName)) {
             throw new LGAppInterfaceDBException("argument error");
         }
 
