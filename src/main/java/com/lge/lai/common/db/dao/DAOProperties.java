@@ -15,7 +15,7 @@ public class DAOProperties {
         try {
             PROPERTIES.load(propertiesFile);
         } catch (IOException e) {
-            throw new DAOConfigurationException("Cannot load properies file '" + PROPERTIES_FILE
+            throw new DAOConfigurationException("Cannot load properties file '" + PROPERTIES_FILE
                     + "'.", e);
         }
     }

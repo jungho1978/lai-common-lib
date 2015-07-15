@@ -19,7 +19,7 @@ public class FeatureProvider {
         this.features.add(feature);
     }
 
-    public void addAllFeature(List<Feature> features) {
+    public void addAllFeatures(List<Feature> features) {
         this.features.addAll(features);
     }
 
