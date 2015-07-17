@@ -6,8 +6,6 @@ import org.junit.Test;
 
 import com.lge.lai.common.data.Feature;
 import com.lge.lai.common.data.FeatureProvider;
-import com.lge.lai.common.db.dao.DAOException;
-import com.lge.lai.common.db.dto.Asb;
 
 public class LGAppInterfaceDBTest {
 

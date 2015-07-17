@@ -32,20 +32,20 @@ public abstract class DAOFactory {
 
     abstract Connection getConnection() throws SQLException;
 
-    public AsbDAO getAsbDAO() {
-        return new AsbDAO(this);
+    public ASBDAO getAsbDAO() {
+        return new ASBDAO(this);
     }
 
-    public AsbCategoryDAO getAsbCategoryDAO(long asbId) {
-        return new AsbCategoryDAO(asbId, this);
+    public ASBCategoryDAO getAsbCategoryDAO(long asbId) {
+        return new ASBCategoryDAO(asbId, this);
     }
 
-    public AsbMimeDAO getAsbMimeDAO(long asbId) {
-        return new AsbMimeDAO(asbId, this);
+    public ASBMimeDAO getAsbMimeDAO(long asbId) {
+        return new ASBMimeDAO(asbId, this);
     }
 
-    public AsbUriDAO getAsbUriDAO(long asbId) {
-        return new AsbUriDAO(asbId, this);
+    public ASBUriDAO getAsbUriDAO(long asbId) {
+        return new ASBUriDAO(asbId, this);
     }
     
     public ProviderDAO getProviderDAO() {

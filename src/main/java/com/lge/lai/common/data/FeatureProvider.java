@@ -14,63 +14,63 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 
 public class FeatureProvider {
-	public String packageName;
-	public String versionName;
-	public List<Feature> features = new ArrayList<Feature>();
+    public String packageName;
+    public String versionName;
+    public List<Feature> features = new ArrayList<Feature>();
 
-	public void addFeature(Feature feature) {
-		this.features.add(feature);
-	}
+    public void addFeature(Feature feature) {
+        this.features.add(feature);
+    }
 
-	public void addAllFeatures(List<Feature> features) {
-		this.features.addAll(features);
-	}
+    public void addAllFeatures(List<Feature> features) {
+        this.features.addAll(features);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof FeatureProvider) {
-			FeatureProvider other = (FeatureProvider) obj;
-			int result = ComparisonChain.start()
-					.compare(packageName, other.packageName, Ordering.natural().nullsLast())
-					.compare(versionName, other.versionName, Ordering.natural().nullsLast())
-					.result();
-			if (result != 0) {
-				return false;
-			}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof FeatureProvider) {
+            FeatureProvider other = (FeatureProvider)obj;
+            int result = ComparisonChain.start()
+                    .compare(packageName, other.packageName, Ordering.natural().nullsLast())
+                    .compare(versionName, other.versionName, Ordering.natural().nullsLast())
+                    .result();
+            if (result != 0) {
+                return false;
+            }
 
-			List<Feature> myFeatures = this.features;
-			List<Feature> yourFeatures = other.features;
-			if (myFeatures.size() == yourFeatures.size()) {
-				for (Feature yourFeature : yourFeatures) {
-					if (!hasSameFeature(yourFeature)) {
-						return false;
-					}
-				}
-			}
+            List<Feature> myFeatures = this.features;
+            List<Feature> yourFeatures = other.features;
+            if (myFeatures.size() == yourFeatures.size()) {
+                for (Feature yourFeature : yourFeatures) {
+                    if (!hasSameFeature(yourFeature)) {
+                        return false;
+                    }
+                }
+            }
 
-			return true;
-		}
-		return false;
-	}
+            return true;
+        }
+        return false;
+    }
 
-	private boolean hasSameFeature(Feature feature) {
-		for (Feature myFeature : this.features) {
-			if (myFeature.equals(feature)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    private boolean hasSameFeature(Feature feature) {
+        for (Feature myFeature : this.features) {
+            if (myFeature.equals(feature)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("[package]\t\t" + packageName + '\n');
-		builder.append("[version]\t\t" + versionName + '\n');
-		for (Feature feature : features) {
-			builder.append("---------------------------------------------------------------" + '\n');
-			builder.append(feature.toString());
-		}
-		return builder.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("[package]\t\t" + packageName + '\n');
+        builder.append("[version]\t\t" + versionName + '\n');
+        for (Feature feature : features) {
+            builder.append("---------------------------------------------------------------" + '\n');
+            builder.append(feature.toString());
+        }
+        return builder.toString();
+    }
 }

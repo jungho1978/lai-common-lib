@@ -125,8 +125,7 @@ public class Feature {
         if (obj instanceof Feature) {
             Feature other = (Feature)obj;
 
-            return ComparisonChain.start()
-                    .compare(type, other.type, STRING_COMPARATOR)
+            return ComparisonChain.start().compare(type, other.type, STRING_COMPARATOR)
                     .compare(className, other.className, STRING_COMPARATOR)
                     .compare(actionName, other.actionName, STRING_COMPARATOR)
                     .compare(schemes, other.schemes, STRING_LIST_COMPARATOR)
@@ -197,7 +196,7 @@ public class Feature {
             return 0;
         }
     };
-    
+
     private static Comparator<String> STRING_COMPARATOR = new Comparator<String>() {
         @Override
         public int compare(String myString, String yourString) {

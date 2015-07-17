@@ -37,6 +37,7 @@ public class Provider extends Base {
         this.primaryKey = primaryKey;
     }
     
+    @SuppressWarnings("deprecation")
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
