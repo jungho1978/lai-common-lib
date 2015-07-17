@@ -2,12 +2,16 @@ package com.lge.lai.common.db;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.lge.lai.common.data.Feature;
 import com.lge.lai.common.data.FeatureProvider;
 import com.lge.lai.common.db.dao.ASBCategoryDAO;
 import com.lge.lai.common.db.dao.ASBDAO;
 import com.lge.lai.common.db.dao.ASBMimeDAO;
 import com.lge.lai.common.db.dao.ASBUriDAO;
+import com.lge.lai.common.db.dao.BaseDAO;
 import com.lge.lai.common.db.dao.DAOFactory;
 import com.lge.lai.common.db.dao.ProviderDAO;
 import com.lge.lai.common.db.dto.ASB;
@@ -17,6 +21,8 @@ import com.lge.lai.common.db.dto.ASBUri;
 import com.lge.lai.common.db.dto.Provider;
 
 public class LGAppInterfaceDB {
+    static Logger LOGGER = LogManager.getLogger(LGAppInterfaceDB.class.getName());
+    
     private static final String UPDATED_BY_MANIFEST = "manifest";
     private static final String UPDATED_BY_DOCUMENT = "document";
 
@@ -27,6 +33,10 @@ public class LGAppInterfaceDB {
     private static DAOFactory daoFactory = DAOFactory.getInstance("LGAppIF.db");
 
     public static void write(FeatureProvider fp) {
+        write(fp, "");
+    }
+
+    public static void write(FeatureProvider fp, String manifestPath) {
         if (fp == null) {
             throw new LGAppInterfaceDBException("nothing to write");
         }
@@ -37,9 +47,15 @@ public class LGAppInterfaceDB {
         for (Feature feature : fp.features) {
             String type = feature.type;
             if (type.equalsIgnoreCase("provider")) {
-                createProviderFeature(packageName, versionName, feature);
+                long providerId = createProviderFeature(packageName, versionName, feature);
+                if (!isEmpty(manifestPath)) {
+                    updateManifestPath(type, providerId, manifestPath);
+                }
             } else {
-                createASBFeature(packageName, versionName, feature);
+                long asbId = createASBFeature(packageName, versionName, feature);
+                if (!manifestPath.isEmpty()) {
+                    updateManifestPath(type, asbId, manifestPath);
+                }
             }
         }
     }
@@ -61,7 +77,7 @@ public class LGAppInterfaceDB {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private static void deleteASBFeature(String packageName, String versionName) {
-        ASBDAO asbDAO = daoFactory.getAsbDAO();
+        ASBDAO asbDAO = daoFactory.getASBDAO();
         List<ASB> asbRows = (List)asbDAO.list(ASBDAO.Where.PACKAGE_AND_VERSION, packageName,
                 versionName);
         for (ASB asb : asbRows) {
@@ -70,43 +86,45 @@ public class LGAppInterfaceDB {
         }
     }
 
-    private static void createProviderFeature(String packageName, String versionName,
+    private static long createProviderFeature(String packageName, String versionName,
             Feature feature) {
         Provider provider = new Provider(versionName, feature.type, DEFAULT_DESC, packageName,
                 feature.className, DEFAULT_TABLE, feature.readPermission, feature.writePermission,
                 feature.authorities, DEFAULT_PRIMARY, UPDATED_BY_MANIFEST);
-        daoFactory.getProviderDAO().create(provider);
+        return daoFactory.getProviderDAO().create(provider);
     }
 
-    private static void createASBFeature(String packageName, String versionName, Feature feature) {
+    private static long createASBFeature(String packageName, String versionName, Feature feature) {
         String type = feature.type;
         String className = feature.className;
         String actionName = feature.actionName;
 
         ASB asb = new ASB(versionName, type, DEFAULT_DESC, packageName, className, actionName,
                 UPDATED_BY_MANIFEST);
-        long asbId = daoFactory.getAsbDAO().create(asb);
+        long asbId = daoFactory.getASBDAO().create(asb);
         if (asbId == -1) {
-            return;
+            return -1;
         }
 
         for (String category : feature.categories) {
             ASBCategory asbCategory = new ASBCategory(versionName, type, DEFAULT_DESC, packageName,
                     className, actionName, category, UPDATED_BY_MANIFEST);
-            daoFactory.getAsbCategoryDAO(asbId).create(asbCategory);
+            daoFactory.getASBCategoryDAO(asbId).create(asbCategory);
         }
 
         for (String mimeType : feature.mimeTypes) {
             ASBMime asbMime = new ASBMime(versionName, type, DEFAULT_DESC, packageName, className,
                     actionName, mimeType, UPDATED_BY_MANIFEST);
-            daoFactory.getAsbMimeDAO(asbId).create(asbMime);
+            daoFactory.getASBMimeDAO(asbId).create(asbMime);
         }
 
         for (String uri : feature.schemes) {
             ASBUri asbUri = new ASBUri(versionName, type, DEFAULT_DESC, packageName, className,
                     actionName, uri, DEFAULT_DESC, UPDATED_BY_MANIFEST);
-            daoFactory.getAsbUriDAO(asbId).create(asbUri);
+            daoFactory.getASBUriDAO(asbId).create(asbUri);
         }
+
+        return asbId;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -129,7 +147,7 @@ public class LGAppInterfaceDB {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private static void listASBFeature(String packageName, String versionName, FeatureProvider fp) {
-        ASBDAO asbDAO = daoFactory.getAsbDAO();
+        ASBDAO asbDAO = daoFactory.getASBDAO();
         List<ASB> asbRows = (List)asbDAO.list(ASBDAO.Where.PACKAGE_AND_VERSION, packageName,
                 versionName);
 
@@ -140,19 +158,19 @@ public class LGAppInterfaceDB {
             feature.className = asb.className;
             feature.actionName = asb.actionName;
 
-            ASBCategoryDAO categoryDAO = daoFactory.getAsbCategoryDAO(asbId);
+            ASBCategoryDAO categoryDAO = daoFactory.getASBCategoryDAO(asbId);
             List<ASBCategory> categoryRows = (List)categoryDAO.list();
             for (ASBCategory category : categoryRows) {
                 feature.addCategory(category.category);
             }
 
-            ASBMimeDAO mimeDAO = daoFactory.getAsbMimeDAO(asbId);
+            ASBMimeDAO mimeDAO = daoFactory.getASBMimeDAO(asbId);
             List<ASBMime> mimeRows = (List)mimeDAO.list();
             for (ASBMime mime : mimeRows) {
                 feature.addMimeType(mime.mimeType);
             }
 
-            ASBUriDAO uriDAO = daoFactory.getAsbUriDAO(asbId);
+            ASBUriDAO uriDAO = daoFactory.getASBUriDAO(asbId);
             List<ASBUri> uriRows = (List)uriDAO.list();
             for (ASBUri uri : uriRows) {
                 feature.addScheme(uri.uri);
@@ -179,6 +197,20 @@ public class LGAppInterfaceDB {
         for (Provider provider : providerRows) {
             long id = provider.getId();
             providerDAO.delete(id);
+        }
+    }
+
+    private static void updateManifestPath(String type, long id, String manifestPath) {
+        if (id == -1) {
+            LOGGER.error("Cannot update it becuase id value is negative");
+            return;
+        }
+        if (type.equals("provider")) {
+            ProviderDAO providerDAO = daoFactory.getProviderDAO();
+            providerDAO.update(id, manifestPath);
+        } else {
+            ASBDAO asbDAO = daoFactory.getASBDAO();
+            asbDAO.update(id, manifestPath);
         }
     }
 

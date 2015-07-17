@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import com.lge.lai.common.db.dto.Provider;
 
 public class ProviderDAO extends BaseDAO implements DaoCallback {
-    static Logger LOGGER = LogManager.getLogger(BaseDAO.class.getName());
+    static Logger LOGGER = LogManager.getLogger(ProviderDAO.class.getName());
 
     private static final String DB = "LGAppIF";
     private static final String TABLE = DB + ".provider";
@@ -23,12 +23,8 @@ public class ProviderDAO extends BaseDAO implements DaoCallback {
     };
 
     private static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE + " WHERE _id = ?";
-
-    private static final String SQL_LIST_BY_PACKAGE = "SELECT * FROM " + TABLE
-            + " WHERE _pkg_name = ?";
-
-    private static final String SQL_LIST_BY_PACKAGE_AND_VERSION = "SELECT * FROM " + TABLE
-            + " WHERE _pkg_name = ? AND _version = ?";
+    
+    private static final String SQL_UPDATE_MANIFEST_PATH = "UPDATE " + TABLE + " SET _manifest_path = ? WHERE _id = ?";
 
     private static final String SQL_INSERT = "INSERT INTO "
             + TABLE
@@ -80,6 +76,11 @@ public class ProviderDAO extends BaseDAO implements DaoCallback {
             LOGGER.error("instance is invalid: " + obj.getClass().getName());
             throw new DAOException("instance is invalid: " + obj.getClass().getName());
         }
+    }
+    
+    public int update(long id, String manifestPath) throws DAOException {
+        Object[] values = { manifestPath, id };
+        return update(SQL_UPDATE_MANIFEST_PATH, values);
     }
 
     @Override

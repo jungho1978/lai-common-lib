@@ -29,7 +29,7 @@ public class ASBCategoryDAOTest {
         String className = packageName + ".MainActivity";
         asb = new ASB(version, type, desc, packageName, className, actionName, updatedBy);
 
-        ASBDAO asbDAO = daoFactory.getAsbDAO();
+        ASBDAO asbDAO = daoFactory.getASBDAO();
         asbId = asbDAO.create(asb);
         if (asbId == -1) {
             fail("duplicated entry exists");
@@ -38,7 +38,7 @@ public class ASBCategoryDAOTest {
 
     @After
     public void tearDown() {
-        ASBDAO asbDAO = daoFactory.getAsbDAO();
+        ASBDAO asbDAO = daoFactory.getASBDAO();
         asbDAO.delete(asbId);
     }
 
@@ -48,7 +48,7 @@ public class ASBCategoryDAOTest {
         ASBCategory asbCategory = new ASBCategory(asb.versionName, asb.type, asb.desc, asb.packageName,
                 asb.className, asb.actionName, category, asb.updatedBy);
 
-        ASBCategoryDAO asbCategoryDAO = daoFactory.getAsbCategoryDAO(asbId);
+        ASBCategoryDAO asbCategoryDAO = daoFactory.getASBCategoryDAO(asbId);
         long asbCategoryId = asbCategoryDAO.create(asbCategory);
         if (asbCategoryId == -1) {
             fail("duplicated entry exists");

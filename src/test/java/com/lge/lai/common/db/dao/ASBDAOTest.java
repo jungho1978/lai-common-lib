@@ -28,7 +28,7 @@ public class ASBDAOTest {
         String className = packageName + ".MainActivity";
         ASB asb = new ASB(version, type, desc, packageName, className, actionName, updatedBy);
 
-        ASBDAO asbDAO = daoFactory.getAsbDAO();
+        ASBDAO asbDAO = daoFactory.getASBDAO();
         long asbId = asbDAO.create(asb);
         if (asbId == -1) {
             fail("duplicated entry exists");

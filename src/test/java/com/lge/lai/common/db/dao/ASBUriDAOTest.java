@@ -29,7 +29,7 @@ public class ASBUriDAOTest {
         String className = packageName + ".MainActivity";
         asb = new ASB(version, type, desc, packageName, className, actionName, updatedBy);
 
-        ASBDAO asbDAO = daoFactory.getAsbDAO();
+        ASBDAO asbDAO = daoFactory.getASBDAO();
         asbId = asbDAO.create(asb);
         if (asbId == -1) {
             fail("duplicated entry exists");
@@ -38,7 +38,7 @@ public class ASBUriDAOTest {
 
     @After
     public void tearDown() {
-        ASBDAO asbDAO = daoFactory.getAsbDAO();
+        ASBDAO asbDAO = daoFactory.getASBDAO();
         try {
             asbDAO.delete(asbId);
         } catch (DAOException e) {
@@ -53,7 +53,7 @@ public class ASBUriDAOTest {
         ASBUri asbUri = new ASBUri(asb.versionName, asb.type, asb.desc, asb.packageName, asb.className,
                 asb.actionName, uri, uriDesc, asb.updatedBy);
 
-        ASBUriDAO asbUriDAO = daoFactory.getAsbUriDAO(asbId);
+        ASBUriDAO asbUriDAO = daoFactory.getASBUriDAO(asbId);
         long asbUriId = asbUriDAO.create(asbUri);
         if (asbUriId == -1) {
             fail("duplicated entry exists");

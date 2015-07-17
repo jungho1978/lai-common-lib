@@ -59,14 +59,14 @@ public abstract class BaseDAO {
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
-                throw new DAOException("Creating failed, no rows affected");
+                throw new DAOException("Updating failed, no rows affected");
             }
 
             generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 return generatedKeys.getLong(1);
             } else {
-                throw new DAOException("Creating failed, no generated key obtained");
+                throw new DAOException("Updating failed, no generated key obtained");
             }
         } catch (SQLException e) {
             if (e.getErrorCode() == MysqlErrorNumbers.ER_DUP_ENTRY) {
@@ -78,6 +78,27 @@ public abstract class BaseDAO {
             }
         } finally {
             close(generatedKeys, statement, connection);
+        }
+    }
+    
+    protected int update(String sql, Object[] values) throws DAOException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = daoFactory.getConnection();
+            statement = prepareStatement(connection, sql, false, values);
+            LOGGER.info(statement.toString());
+
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new DAOException("Updating failed, no rows affected");
+            }
+            return affectedRows;
+        } catch (SQLException e) {
+            LOGGER.error(e);
+            throw new DAOException(e);
+        } finally {
+            close(null, statement, connection);
         }
     }
 

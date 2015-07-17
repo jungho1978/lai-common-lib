@@ -19,6 +19,8 @@ public class ASBDAO extends BaseDAO implements DaoCallback {
     };
 
     private static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE + " WHERE _id = ?";
+    
+    private static final String SQL_UPDATE_MANIFEST_PATH = "UPDATE " + TABLE + " SET _manifest_path = ? WHERE _id = ?";
 
     private static final String SQL_INSERT = "INSERT INTO " + TABLE + " "
             + "(_version, _type, _desc, _pkg_name, _cls_name, _action_name, _updated_by, _ctime) "
@@ -65,6 +67,11 @@ public class ASBDAO extends BaseDAO implements DaoCallback {
         } else {
             throw new DAOException("instance is invalid: " + obj.getClass().getName());
         }
+    }
+    
+    public int update(long id, String manifestPath) throws DAOException {
+        Object[] values = { manifestPath, id };
+        return update(SQL_UPDATE_MANIFEST_PATH, values);
     }
 
     @Override

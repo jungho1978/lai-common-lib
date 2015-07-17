@@ -31,7 +31,7 @@ public class DAOUtil {
         Date now = calendar.getTime();
         return new Timestamp(now.getTime());
     }
-
+    
     public static void close(ResultSet rs, Statement statement, Connection connection) {
         try {
             if (rs != null) {

@@ -9,7 +9,7 @@
 		</Console>
 		<RollingFile name="trace-log" fileName="${log-path}/log-trace.log"
 		    filePattern="${log-path}/log-trace-%d{yyyy-MM-dd}.log">
-		    <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss} %c{1} - %msg%n" />
+		    <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss} [%c{1}/%M] - %msg%n" />
 		    <Policies>
 				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
 				<SizeBasedTriggeringPolicy size="50 MB" />

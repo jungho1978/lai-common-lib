@@ -153,10 +153,10 @@ public class Feature {
             builder.append("[scheme]\t\t" + scheme + '\n');
         }
         for (String host : hosts) {
-            builder.append("[host]\t\t" + host + '\n');
+            builder.append("[host]\t\t\t" + host + '\n');
         }
         for (String port : ports) {
-            builder.append("[port]\t\t" + port + '\n');
+            builder.append("[port]\t\t\t" + port + '\n');
         }
         for (String pathPattern : pathPatterns) {
             builder.append("[pathPattern]\t\t" + pathPattern + '\n');

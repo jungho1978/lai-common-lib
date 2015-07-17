@@ -29,7 +29,7 @@ public class ASBMimeDAOTest {
         String className = packageName + ".MainActivity";
         asb = new ASB(version, type, desc, packageName, className, actionName, updatedBy);
 
-        ASBDAO asbDAO = daoFactory.getAsbDAO();
+        ASBDAO asbDAO = daoFactory.getASBDAO();
         asbId = asbDAO.create(asb);
         if (asbId == -1) {
             fail("duplicate entry exists");
@@ -38,7 +38,7 @@ public class ASBMimeDAOTest {
 
     @After
     public void tearDown() {
-        ASBDAO asbDAO = daoFactory.getAsbDAO();
+        ASBDAO asbDAO = daoFactory.getASBDAO();
         asbDAO.delete(asbId);
     }
 
@@ -48,7 +48,7 @@ public class ASBMimeDAOTest {
         ASBMime asbMime = new ASBMime(asb.versionName, asb.type, asb.desc, asb.packageName,
                 asb.className, asb.actionName, mimeType, asb.updatedBy);
 
-        ASBMimeDAO asbMimeDAO = daoFactory.getAsbMimeDAO(asbId);
+        ASBMimeDAO asbMimeDAO = daoFactory.getASBMimeDAO(asbId);
         long asbMimeId = asbMimeDAO.create(asbMime);
         if (asbMimeId == -1) {
             fail("duplicated entry exists");

@@ -75,7 +75,7 @@ public class InterfaceChecker {
         if (actionWith.componentType() == Component.PROVIDER) {
             // Will be implemented
         } else {
-            ASBDAO asbDAO = daoFactory.getAsbDAO();
+            ASBDAO asbDAO = daoFactory.getASBDAO();
             List<ASB> asbRows = (List)asbDAO.list(Where.PACKAGE_ONLY, packageName);
             for (ASB asb : asbRows) {
                 if (asb.packageName.equals(packageName) && className.endsWith(asb.className)) {
@@ -97,7 +97,7 @@ public class InterfaceChecker {
             fail("Action must be filled in");
         }
 
-        ASBDAO asbDAO = daoFactory.getAsbDAO();
+        ASBDAO asbDAO = daoFactory.getASBDAO();
         List<ASB> asbRows = (List)asbDAO.list(Where.PACKAGE_AND_ACTION, actionWith.toPackage(),
                 action);
         if (asbRows.size() <= 0) {
@@ -119,7 +119,7 @@ public class InterfaceChecker {
     }
 
     private boolean checkCategories(long id, Set<String> categories) {
-        ASBCategoryDAO categoryDAO = daoFactory.getAsbCategoryDAO(id);
+        ASBCategoryDAO categoryDAO = daoFactory.getASBCategoryDAO(id);
         if (categories != null && categories.size() >= 1) {
             for (String category : categories) {
                 if (categoryDAO.list(category).size() >= 1) {
@@ -133,7 +133,7 @@ public class InterfaceChecker {
     }
     
     private boolean checkScheme(long id, String scheme) {
-        ASBUriDAO uriDAO = daoFactory.getAsbUriDAO(id);
+        ASBUriDAO uriDAO = daoFactory.getASBUriDAO(id);
         if (!isEmpty(scheme)) {
             if (uriDAO.list(scheme).size() >= 1) {
                 return true;
@@ -145,7 +145,7 @@ public class InterfaceChecker {
     }
     
     private boolean checkMimeType(long id, String mimeType) {
-        ASBMimeDAO mimeDAO = daoFactory.getAsbMimeDAO(id);
+        ASBMimeDAO mimeDAO = daoFactory.getASBMimeDAO(id);
         if (!isEmpty(mimeType)) {
             if (mimeDAO.list(mimeType).size() >= 1) {
                 return true;
