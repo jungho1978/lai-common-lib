@@ -2,6 +2,7 @@ package com.lge.lai.common.checker;
 
 import static org.junit.Assert.fail;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
@@ -22,72 +23,82 @@ import com.lge.lai.common.db.dao.ASBMimeDAO;
 import com.lge.lai.common.db.dao.ASBUriDAO;
 import com.lge.lai.common.db.dao.DAOFactory;
 import com.lge.lai.common.db.dto.ASB;
+import com.lge.lai.common.db.dto.ASBCategory;
 import com.lge.lai.common.db.dto.ASBUri;
 
 public class InterfaceChecker {
     static Logger LOGGER = LogManager.getLogger(InterfaceChecker.class.getName());
+    
+    private static String TESTCASE_EXECUTOR = "TestCaseExecutorMain";
 
     private DAOFactory daoFactory;
     private Class<?> clazz;
-
+    private boolean IGNORE_ASSERTION;
+    
     public InterfaceChecker(Class<?> clazz) {
         this.clazz = clazz;
         daoFactory = DAOFactory.getInstance("LGAppIF.db");
+        
+        if (this.clazz.getSimpleName().equals(TESTCASE_EXECUTOR)) {
+            IGNORE_ASSERTION = true;
+        }
     }
-
-    public void validates(Intent intent) {
+    
+    public boolean validates(Intent intent) {
         String caller = getCallerMethodName();
         LOGGER.info(caller);
-        validates(caller, intent);
+        return validates(caller, intent);
     }
 
-    public void validates(String caller, Intent intent) {
+    public boolean validates(String caller, Intent intent) {
         Method m = null;
         try {
             m = clazz.getDeclaredMethod(caller);
         } catch (Exception e) {
             e.printStackTrace();
-            fail("Cannot find method to test");
+            return assertFail("Cannot find method to test");
         }
 
         ActionWith actionWith = m.getAnnotation(ActionWith.class);
-        LOGGER.info("[ActionWith] " + actionWith.toPackage());
-        LOGGER.info("[ActionWith] " + actionWith.callType());
-        LOGGER.info("[ActionWith] " + actionWith.componentType());
-
-        if (actionWith.callType() == Call.EXPLICIT) {
-            processExplicitCall(actionWith, intent);
+        return validates(actionWith.toPackage(), actionWith.callType(), actionWith.componentType(), intent);
+    }
+    
+    public boolean validates(String toPackage, Call callType, Component componentType, Intent intent) {
+        CallerInfo callerInfo = new CallerInfo(toPackage, callType, componentType);
+        if (callType == Call.EXPLICIT) {
+            return processExplicitCall(callerInfo, intent);
         } else {
-            processImplicitCall(actionWith, intent);
+            return processImplicitCall(callerInfo, intent);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void processExplicitCall(ActionWith actionWith, Intent intent) {
+    private boolean processExplicitCall(CallerInfo callerInfo, Intent intent) {
         ComponentName componentName = intent.getComponent();
         String packageName = componentName.getPackageName();
         String className = componentName.getClassName();
 
-        if (!packageName.equals(actionWith.toPackage())) {
-            fail("Different with toPackage: " + packageName);
+        if (!packageName.equals(callerInfo.toPackage)) {
+            return assertFail("Different with toPackage: " + packageName);
         }
 
-        if (actionWith.componentType() == Component.PROVIDER) {
+        if (callerInfo.componentType == Component.PROVIDER) {
             // Will be implemented
+            return false;
         } else {
             ASBDAO asbDAO = daoFactory.getASBDAO();
             List<ASB> asbRows = (List)asbDAO.list(Where.PACKAGE_ONLY, packageName);
             for (ASB asb : asbRows) {
                 if (asb.packageName.equals(packageName) && className.endsWith(asb.className)) {
-                    return;
+                    return true;
                 }
             }
-            fail("Interface validation error: " + actionWith);
+            return assertFail("Interface validation error: " + callerInfo);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void processImplicitCall(ActionWith actionWith, Intent intent) {
+    private boolean processImplicitCall(CallerInfo callerInfo, Intent intent) {
         String action = intent.getAction();
         Set<String> categories = intent.getCategories();
         String scheme = intent.getScheme();
@@ -98,28 +109,33 @@ public class InterfaceChecker {
         }
 
         ASBDAO asbDAO = daoFactory.getASBDAO();
-        List<ASB> asbRows = (List)asbDAO.list(Where.PACKAGE_AND_ACTION, actionWith.toPackage(),
-                action);
+        List<ASB> asbRows = (List)asbDAO.list(Where.PACKAGE_AND_ACTION, callerInfo.toPackage, action);
         if (asbRows.size() <= 0) {
-            fail("Interface validation error: " + actionWith);
+            return assertFail("Interface validation error: " + callerInfo);
         }
 
-        if (categories == null && isEmpty(scheme) && isEmpty(mimeType)) {
-            return; // Success
-        }
+//        if (categories == null && isEmpty(scheme) && isEmpty(mimeType)) {
+//            return true; // Success
+//        }
 
         for (ASB asb : asbRows) {
-            if (checkCategories(asb.getId(), categories)
-                    && checkScheme(asb.getId(), scheme)
+            if (checkCategories(asb.getId(), categories) && checkScheme(asb.getId(), scheme)
                     && checkMimeType(asb.getId(), mimeType)) {
-                return;
+                return true;
             }
         }
-        fail("Interface validation error: " + actionWith);
+        return assertFail("Interface validation error: " + callerInfo);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private boolean checkCategories(long id, Set<String> categories) {
         ASBCategoryDAO categoryDAO = daoFactory.getASBCategoryDAO(id);
+        List<ASBCategory> categoryRows = (List)categoryDAO.list();
+        if (categoryRows.size() <= 0 && 
+                (categories == null || categories.size() <= 0)) {
+            return true;
+        }
+        
         if (categories != null && categories.size() >= 1) {
             for (String category : categories) {
                 if (categoryDAO.list(category).size() >= 1) {
@@ -131,7 +147,7 @@ public class InterfaceChecker {
         }
         return false;
     }
-    
+
     private boolean checkScheme(long id, String scheme) {
         ASBUriDAO uriDAO = daoFactory.getASBUriDAO(id);
         if (!isEmpty(scheme)) {
@@ -143,7 +159,7 @@ public class InterfaceChecker {
         }
         return false;
     }
-    
+
     private boolean checkMimeType(long id, String mimeType) {
         ASBMimeDAO mimeDAO = daoFactory.getASBMimeDAO(id);
         if (!isEmpty(mimeType)) {
@@ -164,5 +180,13 @@ public class InterfaceChecker {
 
     private boolean isEmpty(String str) {
         return str == null || str.isEmpty();
+    }
+    
+    private boolean assertFail(String message) {
+        LOGGER.error(message);
+        if (!IGNORE_ASSERTION) {
+            fail(message);
+        }
+        return false;
     }
 }
